@@ -63,3 +63,5 @@ class FHFileSystemEntry {
         return this.manager._rejectReturnReason(reason, path, name);
     }
 }
+
+window.FHFileSystemEntry = FHFileSystemEntry;

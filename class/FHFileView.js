@@ -3,3 +3,5 @@ class FHFileView {
         this.current_path = '/';
     }
 }
+
+window.FHFileView = FHFileView;

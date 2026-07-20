@@ -31,3 +31,5 @@ class FHDirectoryEntry extends FHFileSystemEntry {
         return this._resolveReturn(entry, entry.path, entry.name)
     }
 }
+
+window.FHDirectoryEntry = FHDirectoryEntry;

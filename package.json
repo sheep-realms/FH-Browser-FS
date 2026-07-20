@@ -1,0 +1,9 @@
+{
+	"scripts": {
+		"build": "esbuild index.js --bundle --outfile=dist/fh-browser-fs.js",
+		"build_minify": "esbuild index.js --bundle --minify --outfile=dist/fh-browser-fs.min.js"
+	},
+	"dependencies": {
+		"esbuild": "^0.28.1"
+	}
+}

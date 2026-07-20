@@ -230,3 +230,5 @@ class FHFileManager {
     //     }
     // }
 }
+
+window.FHFileManager = FHFileManager;

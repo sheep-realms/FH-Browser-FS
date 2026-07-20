@@ -13,3 +13,5 @@ class FHFileEntry extends FHFileSystemEntry {
         return a.join('.');
     }
 }
+
+window.FHFileEntry = FHFileEntry;
