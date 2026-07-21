@@ -85,7 +85,7 @@ class FHFileView {
      */
     async back() {
         if (!this.can_back) {
-            return this.manager._rejectReturnReason('ACCESS__ROOT_DIRECTORY_BACK');
+            return this.manager._rejectReturnReason('ACCESS__ROOT_DIRECTORY_RETURN');
         }
 
         this.#removeDirectoryStack();

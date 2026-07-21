@@ -25,4 +25,4 @@ parameter
 | 代码 | 说明 |
 | - | - |
 | `ACCESS__FILE_NOT_FOUND` | 文件未找到。 |
-| `ACCESS__ROOT_DIRECTORY_BACK` | 试图在根目录返回上一级。 |
+| `ACCESS__ROOT_DIRECTORY_RETURN` | 试图在根目录返回上一级。 |
