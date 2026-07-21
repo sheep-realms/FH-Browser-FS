@@ -1,12 +1,15 @@
 class FHDirectoryEntry extends FHFileSystemEntry {
     constructor(manager, handle = null, path = '/', options = {}) {
         super(manager, handle, path, options);
+        this.is_root = (options.root_directory ?? false) && handle.kind === 'directory';
     }
 
     async list() {
         const entries = [];
         for await (const [name, handle] of this.handle.entries()) {
-            entries.push(this.manager.createEntry(handle, this.absolute_path));
+            const entry = this.manager.createEntry(handle, this.absolute_path);
+            if (entry.is_file) await entry._checkReady();
+            entries.push(entry);
         }
         entries.sort((a, b) => {
             if (a.kind !== b.kind) return a.kind === 'directory' ? -1 : 1;

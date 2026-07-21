@@ -3,7 +3,6 @@ class FHFileSystemEntry {
         this.path = path;
         this.handle = handle;
         this.manager = manager;
-        this.is_root = options.root_directory && handle.kind === 'directory';
     }
 
     get kind() {

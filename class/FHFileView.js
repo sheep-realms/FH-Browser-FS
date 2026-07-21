@@ -4,6 +4,10 @@ class FHFileView {
         this.root_entry = manager.root_entry;
         this.directory_stack = [];
     }
+
+    get can_back() {
+        return this.directory_stack.length > 0;
+    }
     
     get current_path() {
         let stack = [];
@@ -53,17 +57,26 @@ class FHFileView {
         if (!r.success) return r;
         const entry = r.payload;
         if (entry.is_file) {
-            return this.manager._resolveReturn({
-                kind: 'file',
-                entry: entry
-            });
+            await entry._checkReady();
+            return this.manager._resolveReturn(
+                {
+                    kind: 'file',
+                    entry: entry
+                },
+                this.current_path,
+                name
+            );
         }
         this.#addDirectoryStack(entry);
         const list = await entry.list();
-        return this.manager._resolveReturn({
-            kind: 'directory',
-            list: list.payload
-        });
+        return this.manager._resolveReturn(
+            {
+                kind: 'directory',
+                list: list.payload,
+                can_back: this.can_back
+            },
+            this.current_path
+        );
     }
 
     /**
@@ -71,7 +84,7 @@ class FHFileView {
      * @returns {Promise} Promise
      */
     async back() {
-        if (this.directory_stack.length === 0) {
+        if (!this.can_back) {
             return this.manager._rejectReturnReason('ACCESS__ROOT_DIRECTORY_BACK');
         }
 
@@ -80,7 +93,8 @@ class FHFileView {
         const list = await this.current_directory_entry.list();
         return this.manager._resolveReturn({
             kind: 'directory',
-            list: list.payload
+            list: list.payload,
+            can_back: this.can_back
         });
     }
 
