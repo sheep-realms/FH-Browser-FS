@@ -10,6 +10,14 @@ class FHFileSystemEntry {
         return this.handle.kind;
     }
 
+    get is_directory() {
+        return this.kind === 'directory';
+    }
+
+    get is_file() {
+        return this.kind === 'file';
+    }
+
     get name() {
         return this.handle.name;
     }

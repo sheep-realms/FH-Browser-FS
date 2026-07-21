@@ -13,6 +13,9 @@ class FHFileManager {
         this.is_ready = false;
         this.read_only = true;
 
+        this.view = new Map();
+        this.view_index = 0;
+
         this.config = {
             cache: {
                 recently_access_length: 128
@@ -20,44 +23,44 @@ class FHFileManager {
         };
 
         this.#cache = {
-            entry_map: new Map(),
-            recently_access_path: []
+            // entry_map: new Map(),
+            // recently_access_path: []
         };
     }
 
-    #updateRecentlyAccess(path, entry) {
-        if (path === '' || path === '/') return this.#cache.recently_access_path;
+    // #updateRecentlyAccess(path, entry) {
+    //     if (path === '' || path === '/') return this.#cache.recently_access_path;
 
-        let list = this.#cache.recently_access_path.filter(e => e !== path);
-        list.unshift(path);
+    //     let list = this.#cache.recently_access_path.filter(e => e !== path);
+    //     list.unshift(path);
 
-        const removePath = list.splice(this.config.cache.recently_access_path_length);
-        removePath.forEach(e => {
-            this.#cache.entry_map.delete(e);
-        });
+    //     const removePath = list.splice(this.config.cache.recently_access_path_length);
+    //     removePath.forEach(e => {
+    //         this.#cache.entry_map.delete(e);
+    //     });
 
-        this.#cache.entry_map.set(path, entry);
-        this.#cache.recently_access_path = list;
+    //     this.#cache.entry_map.set(path, entry);
+    //     this.#cache.recently_access_path = list;
 
-        return this.#cache.recently_access_path;
-    }
+    //     return this.#cache.recently_access_path;
+    // }
 
-    #sortRecentlyAccess(path) {
-        if (!this.#cache.recently_access_path.includes(path)) return this.#cache.recently_access_path;
+    // #sortRecentlyAccess(path) {
+    //     if (!this.#cache.recently_access_path.includes(path)) return this.#cache.recently_access_path;
 
-        let list = this.#cache.recently_access_path.filter(e => e !== path);
-        list.unshift(path);
+    //     let list = this.#cache.recently_access_path.filter(e => e !== path);
+    //     list.unshift(path);
 
-        this.#cache.recently_access_path = list;
-        return this.#cache.recently_access_path;
-    }
+    //     this.#cache.recently_access_path = list;
+    //     return this.#cache.recently_access_path;
+    // }
 
-    #getEntryCache(path) {
-        if (path === '' || path === '/') return this.root_entry;
-        const entry = this.#cache.entry_map.get(path);
-        if (entry !== undefined) this.#sortRecentlyAccess(path);
-        return entry
-    }
+    // #getEntryCache(path) {
+    //     if (path === '' || path === '/') return this.root_entry;
+    //     const entry = this.#cache.entry_map.get(path);
+    //     if (entry !== undefined) this.#sortRecentlyAccess(path);
+    //     return entry
+    // }
 
     async pickDirectory() {
         if (typeof window.showDirectoryPicker !== 'function') {
@@ -213,22 +216,26 @@ class FHFileManager {
         }
     }
 
-    cerateView(path) {
-        // TODO: 创建视图
+    async cerateView(id, path) {
+        if (!this.is_ready) return this._rejectReturnReason('SYSTEM__NOT_READY');
+
+        const index = ++this.view_index;
+        const viewId = typeof id === 'string' ? id : `__fh_view_index_${ index }`;
+
+        // TODO: 转到指定路径
+        if (typeof path === 'string' && !path.startsWith('/')) {
+            path = this._resolvePath(this.current_path, path);
+        }
+        const view = new FHFileView(this);
+
+        this.view.set(viewId, view);
+
+        return this._resolveReturn(view, path);
     }
 
-    // async access(path = '/') {
-    //     if (!this.is_ready) return this._rejectReturnReason('SYSTEM__NOT_READY');
-
-    //     if (!path.startsWith('/')) {
-    //         path = this._resolvePath(this.current_path, path);
-    //     }
-
-    //     const entryCache = this.#getEntryCache(path);
-    //     if (entryCache !== undefined) {
-    //         return new Promise(resolve => resolve(entryCache));
-    //     }
-    // }
+    getView(id) {
+        return this.view.get(id);
+    }
 }
 
 window.FHFileManager = FHFileManager;

@@ -1,5 +1,14 @@
 # 拒绝原因列表
 
+parameter
+
+## 参数
+
+| 代码 | 说明 |
+| - | - |
+| `PARAMETER__VALUE_INVALID` | 无效的参数值。 |
+| `PARAMETER__TYPE_ERROR` | 参数类型错误。 |
+
 ## 系统
 
 | 代码 | 说明 |
@@ -13,6 +22,7 @@
 
 ## 文件访问
 
-| 代码 | 说明 |
+| 代码 | 说明 |root directory
 | - | - |
 | `ACCESS__FILE_NOT_FOUND` | 文件未找到。 |
+| `ACCESS__ROOT_DIRECTORY_BACK` | 试图在根目录返回上一级。 |
