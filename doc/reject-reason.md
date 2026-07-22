@@ -25,3 +25,12 @@
 | - | - |
 | `ACCESS__FILE_NOT_FOUND` | 文件未找到。 |
 | `ACCESS__ROOT_DIRECTORY_RETURN` | 试图在根目录返回上一级。 |
+
+## 文件写入
+
+| 代码 | 说明 |
+| - | - |
+| `WRITE__ABORT` | 写入被浏览器安全扫描拒绝。 |
+| `WRITE__NO_MODIFICATION_ALLOWED` | 浏览器无法获取与文件句柄关联的文件的锁。 |
+| `WRITE__QUOTA_EXCEEDED` | 磁盘空间不足。 |
+| `WRITE__UNKNOW_ERROR` | 写入时发生未知错误。 |

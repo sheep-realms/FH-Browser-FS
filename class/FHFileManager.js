@@ -74,13 +74,19 @@ class FHFileManager {
             this.root_handle = await window.showDirectoryPicker({ id: this.id, mode: 'readwrite' });
         } catch (error) {
             const ERROR_REASON = {
-                AbortError: 'SYSTEM__PICK_DIRECTORY_ABORT',
-                SecurityError: 'SYSTEM__SECURITY_ERROR'
+                AbortError:     'SYSTEM__PICK_DIRECTORY_ABORT',
+                SecurityError:  'SYSTEM__SECURITY_ERROR'
             }
             if (ERROR_REASON[error.name] === undefined) {
-                return this._rejectReturnReason('SYSTEM__UNKNOW_ERROR');
+                return this._rejectReturn({
+                    reason: 'SYSTEM__UNKNOW_ERROR',
+                    error
+                });
             }
-            return this._rejectReturnReason(ERROR_REASON[error.name]);
+            return this._rejectReturnReason({
+                reason: ERROR_REASON[error.name],
+                error
+            });
         }
 
         const permission = await this.root_handle.requestPermission({ mode: 'readwrite' });

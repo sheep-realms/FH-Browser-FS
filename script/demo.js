@@ -57,7 +57,7 @@ function renderFileList(list) {
 }
 
 function checkActionEnable() {
-    $('#view-refresh, #view-demo-print').removeAttr('disabled');
+    $('#view-refresh, #view-demo-print-directory, #view-demo-print-list').removeAttr('disabled');
     if (userView.can_back) {
         $('#view-back').removeAttr('disabled');
     } else {
@@ -95,7 +95,11 @@ $(document).on('click', '#view-refresh', async function() {
     renderFileList(r.payload);
 })
 
-$(document).on('click', '#view-demo-print', async function() {
+$(document).on('click', '#view-demo-print-directory', function() {
+    demo_print = userView.current_directory_entry;
+})
+
+$(document).on('click', '#view-demo-print-list', async function() {
     const r = await userView.list();
     if (!r.success) return;
     demo_print = r.payload;

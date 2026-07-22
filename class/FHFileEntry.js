@@ -89,6 +89,34 @@ class FHFileEntry extends FHFileSystemEntry {
 
         return this._resolveReturn(text);
     }
+
+    async writeText(content) {
+        try {
+            const writable = await this.handle.createWritable();
+            await writable.write(content);
+            await writable.close();
+            return this._resolveReturn();
+        } catch (error) {
+            const ERROR_REASON = {
+                AbortError:                 'WRITE__ABORT',
+                NotAllowedError:            'SYSTEM__READ_ONLY',
+                NotFoundError:              'ACCESS__FILE_NOT_FOUND',
+                NoModificationAllowedError: 'WRITE__NO_MODIFICATION_ALLOWED',
+                QuotaExceededError:         'WRITE__QUOTA_EXCEEDED',
+                TypeError:                  'PARAMETER__TYPE_ERROR'
+            }
+            if (ERROR_REASON[error.name] === undefined) {
+                return this._rejectReturn({
+                    reason: 'WRITE__UNKNOW_ERROR',
+                    error
+                });
+            }
+            return this._rejectReturn({
+                reason: ERROR_REASON[error.name],
+                error
+            });
+        }
+    }
 }
 
 window.FHFileEntry = FHFileEntry;

@@ -15,14 +15,17 @@
 </head>
 <body>
     <h1>FH-Browser-FS</h1>
-    <hr>
-    <div class="view-action">
+    <fieldset class="view-controller">
+        <legend>Controller</legend>
         <button id="pick-directory">Pick Directory</button>
         <button id="view-back" disabled>← Back</button>
         <button id="view-refresh" disabled>Refresh</button>
-        <button id="view-demo-print" disabled>let demo_print = This List</button>
-    </div>
-    <hr>
+    </fieldset>
+    <fieldset class="view-debug">
+        <legend>Debug (let demo_print = ?)</legend>
+        <button id="view-demo-print-directory" disabled>This Directory</button>
+        <button id="view-demo-print-list" disabled>This List</button>
+    </fieldset>
     <div id="view-path"></div>
     <div id="file-list"></div>
     <hr>
