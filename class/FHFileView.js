@@ -5,10 +5,12 @@ class FHFileView {
         this.directory_stack = [];
     }
 
+    // 可返回上一级目录
     get can_back() {
         return this.directory_stack.length > 0;
     }
     
+    // 当前路径
     get current_path() {
         let stack = [];
         this.directory_stack.forEach(e => {
@@ -21,16 +23,27 @@ class FHFileView {
         return '/' + stack.join('/');
     }
 
+    // 当前目录入口
     get current_directory_entry() {
         if (this.directory_stack.length === 0) return this.root_entry;
         return this.directory_stack[this.directory_stack.length - 1];
     }
 
+    /**
+     * 添加目录堆栈
+     * @private
+     * @param {FHDirectoryEntry} entry 要添加的目录入口
+     */
     #addDirectoryStack(entry) {
         this.directory_stack.push(entry);
     }
 
-    #removeDirectoryStack(entry) {
+    /**
+     * 移除顶层目录堆栈
+     * @private
+     * @param {FHDirectoryEntry} entry 用于匹配的要移除的目录入口
+     */
+    #removeDirectoryStack(entry = undefined) {
         if (typeof entry === 'object' && entry.name !== this.current_directory_entry.name) {
             console.alert('[FHFileView] Rejected removal of mismatched stacks.');
             return;
@@ -80,7 +93,7 @@ class FHFileView {
     }
 
     /**
-     * 返回上一级文件夹
+     * 返回上一级目录
      * @returns {Promise} Promise
      */
     async back() {
@@ -101,10 +114,20 @@ class FHFileView {
         );
     }
 
+    /**
+     * 列出当前目录中的文件
+     * @returns {Promise} Promise
+     */
     async list() {
         return this.current_directory_entry.list();
     }
 
+    /**
+     * 在当前目录中创建文件
+     * @param {string} name 文件名
+     * @param {string} content 文件内容
+     * @returns {Promise} Promise
+     */
     async createFile(name, content = '') {
         return await this.current_directory_entry.createFile(name, content);
     }

@@ -30,7 +30,7 @@
 FHFileManager - 文件管理器
 FHFileView - 用户视图
 FHFileSystemEntry - 文件系统入口
-├── FHDirectoryEntry - 文件夹入口
+├── FHDirectoryEntry - 目录入口
 └── FHFileEntry - 文件入口
 ```
 

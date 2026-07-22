@@ -65,6 +65,10 @@ class FHFileManager {
     //     return entry
     // }
 
+    /**
+     * 打开目录选择器
+     * @returns {Promise} Promise
+     */
     async pickDirectory() {
         if (typeof window.showDirectoryPicker !== 'function') {
             return this._rejectReturnReason('SYSTEM__FILE_SYSTEM_ACCESS_API_UNAVAILABLE');
@@ -103,6 +107,10 @@ class FHFileManager {
         return this._resolveReturn(this.root_entry, undefined, this.root_entry.name);
     }
 
+    /**
+     * 获取根目录入口
+     * @returns {FHDirectoryEntry} 根目录入口
+     */
     getRootEntry() {
         return this.root_entry;
     }
@@ -217,6 +225,13 @@ class FHFileManager {
         return this._rejectReturn({ reason }, path, name);
     }
 
+    /**
+     * 创建文件系统入口
+     * @param {FileSystemDirectoryHandle|FileSystemFileHandle} handle 文件或目录 handle
+     * @param {string} path 路径
+     * @param {Object} options 选项
+     * @returns {FHDirectoryEntry|FHFileEntry} 文件系统入口
+     */
     createEntry(handle, path, options = {}) {
         if (handle.kind === 'directory') {
             return new FHDirectoryEntry(this, handle, path, options);
@@ -225,6 +240,12 @@ class FHFileManager {
         }
     }
 
+    /**
+     * 创建视图
+     * @param {string} id 视图 ID
+     * @param {string} path 路径
+     * @returns {Promise} Promise
+     */
     async cerateView(id, path) {
         if (!this.is_ready) return this._rejectReturnReason('SYSTEM__NOT_READY');
 
@@ -242,6 +263,11 @@ class FHFileManager {
         return this._resolveReturn(view, path);
     }
 
+    /**
+     * 获取视图
+     * @param {string} id 视图 ID
+     * @returns {FHFileView} 视图
+     */
     getView(id) {
         return this.view.get(id);
     }

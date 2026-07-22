@@ -7,23 +7,27 @@ class FHFileEntry extends FHFileSystemEntry {
         this.is_ready = false;
         this.#check_ready_callback = () => {};
 
-        this._getFile();
+        this.#getFile();
     }
 
+    // 扩展名
     get extension_name() {
         return this.name.split('.').pop().toLowerCase();
     }
 
+    // 不包含扩展名的文件名
     get name_without_extension() {
         let a = this.name.split('.');
         a.pop();
         return a.join('.');
     }
 
+    // 文件尺寸
     get size() {
         return this.file.size;
     }
 
+    // 文件的格式化尺寸
     get format_size() {
         const bytes = this.size;
         if (bytes < 1024) return bytes + ' B';
@@ -33,22 +37,31 @@ class FHFileEntry extends FHFileSystemEntry {
         return (bytes / (1024 * 1024 * 1024 * 1024)).toFixed(1) + ' TiB';
     }
 
+    // 文件 MIME 类型
     get type() {
         return this.file.type;
     }
 
+    // 最后修改时间（时间戳）
     get last_modified() {
         return this.file.lastModified;
     }
 
+    // 最后修改时间（Date 对象）
     get last_modified_date() {
         return this.file.lastModifiedDate;
     }
 
+    // 最后修改时间（格式化时间）
     get last_modified_format_date() {
         return this.last_modified_date.toLocaleString();
     }
 
+    /**
+     * 等候就绪
+     * @description 如果已就绪则直接解决 Promise，否则将会阻塞异步直到就绪
+     * @returns {Promise} Promise
+     */
     async _checkReady() {
         if (this.is_ready) return new Promise(resolve => resolve());
 
@@ -60,7 +73,12 @@ class FHFileEntry extends FHFileSystemEntry {
         return p;
     }
 
-    async _getFile() {
+    /**
+     * 载入 File 对象
+     * @private
+     * @returns {Promise} Promise
+     */
+    async #getFile() {
         let rsl;
         const p = new Promise(resolve => { rsl = resolve });
 
@@ -77,19 +95,32 @@ class FHFileEntry extends FHFileSystemEntry {
         return p;
     }
 
+    /**
+     * 获取 File 对象
+     * @returns {File} File 对象
+     */
     getFile() {
         if (!this.is_ready) return;
         return this.file;
     }
 
+    /**
+     * 读取文本
+     * @returns {Promise} Promise
+     */
     async readText() {
-        if (!this.is_ready) await this._getFile();
+        if (!this.is_ready) await this.#getFile();
 
         const text = await this.file.text();
 
         return this._resolveReturn(text);
     }
 
+    /**
+     * 写入文本
+     * @param {string} content 文本
+     * @returns {Promise} Promise
+     */
     async writeText(content) {
         try {
             const writable = await this.handle.createWritable();

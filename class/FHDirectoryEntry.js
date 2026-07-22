@@ -4,6 +4,10 @@ class FHDirectoryEntry extends FHFileSystemEntry {
         this.is_root = (options.root_directory ?? false) && handle.kind === 'directory';
     }
 
+    /**
+     * 列出目录中的文件
+     * @returns {Promise} Promise
+     */
     async list() {
         const entries = [];
         for await (const [name, handle] of this.handle.entries()) {
@@ -19,6 +23,11 @@ class FHDirectoryEntry extends FHFileSystemEntry {
         return this._resolveReturn(entries)
     }
 
+    /**
+     * 获取目录中指定的文件
+     * @param {string} name 文件名
+     * @returns {Promise} Promise
+     */
     async get(name) {
         const r = await this.list();
         const entry = r.payload.find(e => e.name === name);
@@ -34,6 +43,12 @@ class FHDirectoryEntry extends FHFileSystemEntry {
         return this._resolveReturn(entry, entry.path, entry.name)
     }
 
+    /**
+     * 创建文件
+     * @param {string} name 文件名
+     * @param {string} content 文件内容
+     * @returns {Promise} Promise
+     */
     async createFile(name, content = '') {
         try {
             const newFileHandle = await this.handle.getFileHandle(name, { create: true });

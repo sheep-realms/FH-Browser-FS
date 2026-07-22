@@ -5,22 +5,27 @@ class FHFileSystemEntry {
         this.manager = manager;
     }
 
+    // 文件或目录
     get kind() {
         return this.handle.kind;
     }
 
+    // 是否为目录
     get is_directory() {
         return this.kind === 'directory';
     }
 
+    // 是否为文件
     get is_file() {
         return this.kind === 'file';
     }
 
+    // 文件名
     get name() {
         return this.handle.name;
     }
 
+    // 包含文件名的完整路径
     get absolute_path() {
         if (this.is_root) return '/';
         return this._resolvePath(this.path, this.name);
