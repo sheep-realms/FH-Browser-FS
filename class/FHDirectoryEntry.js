@@ -33,6 +33,33 @@ class FHDirectoryEntry extends FHFileSystemEntry {
         
         return this._resolveReturn(entry, entry.path, entry.name)
     }
+
+    async createFile(name, content = '') {
+        try {
+            const newFileHandle = await this.handle.getFileHandle(name, { create: true });
+            const writable = await newFileHandle.createWritable();
+            await writable.write(content);
+            await writable.close();
+            const entry = this.manager.createEntry(newFileHandle, this.absolute_path);
+            return this._resolveReturn(entry, this.absolute_path, name);
+        } catch (error) {
+            const ERROR_REASON = {
+                NotAllowedError:    'SYSTEM__READ_ONLY',
+                TypeMismatchError:  'WRITE__DIRECTORY_NAME_OCCUPIED',
+                TypeError:          'PARAMETER__TYPE_ERROR'
+            }
+            if (ERROR_REASON[error.name] === undefined) {
+                return this._rejectReturn({
+                    reason: 'WRITE__UNKNOW_ERROR',
+                    error
+                });
+            }
+            return this._rejectReturn({
+                reason: ERROR_REASON[error.name],
+                error
+            });
+        }
+    }
 }
 
 window.FHDirectoryEntry = FHDirectoryEntry;

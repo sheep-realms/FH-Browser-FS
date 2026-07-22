@@ -104,6 +104,10 @@ class FHFileView {
     async list() {
         return this.current_directory_entry.list();
     }
+
+    async createFile(name, content = '') {
+        return await this.current_directory_entry.createFile(name, content);
+    }
 }
 
 window.FHFileView = FHFileView;

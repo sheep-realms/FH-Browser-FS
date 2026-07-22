@@ -31,6 +31,7 @@
 | 代码 | 说明 |
 | - | - |
 | `WRITE__ABORT` | 写入被浏览器安全扫描拒绝。 |
+| `WRITE__DIRECTORY_NAME_OCCUPIED` | 要创建的文件名被文件夹占用。 |
 | `WRITE__NO_MODIFICATION_ALLOWED` | 浏览器无法获取与文件句柄关联的文件的锁。 |
 | `WRITE__QUOTA_EXCEEDED` | 磁盘空间不足。 |
 | `WRITE__UNKNOW_ERROR` | 写入时发生未知错误。 |
