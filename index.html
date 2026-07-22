@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>FH-Browser-FS</title>
+    <link rel="stylesheet" href="style/demo.css">
     <script src="class/FHFileSystemEntry.js"></script>
     <script src="class/FHFileEntry.js"></script>
     <script src="class/FHDirectoryEntry.js"></script>
@@ -12,10 +13,18 @@
     <script src="script/jquery-3.7.1.min.js"></script>
 </head>
 <body>
-    <button id="pick-directory">Pick Directory</button>
-    <button id="view-back" disabled>← Back</button>
-    <button id="view-refresh" disabled>Refresh</button>
+    <h1>FH-Browser-FS</h1>
+    <hr>
+    <div class="view-action">
+        <button id="pick-directory">Pick Directory</button>
+        <button id="view-back" disabled>← Back</button>
+        <button id="view-refresh" disabled>Refresh</button>
+        <button id="view-demo-print" disabled>let demo_print = This List</button>
+    </div>
+    <hr>
+    <div id="view-path"></div>
     <div id="file-list"></div>
+    <hr>
     <script src="script/demo.js"></script>
 </body>
 </html>

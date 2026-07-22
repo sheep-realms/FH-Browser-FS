@@ -7,17 +7,11 @@ class FHFileEntry extends FHFileSystemEntry {
         this.is_ready = false;
         this.#check_ready_callback = () => {};
 
-        handle.getFile()
-            .then(file => {
-                this.file = file;
-                this.is_ready = true;
-                this.#check_ready_callback();
-            })
-            .catch(error => { throw error });
+        this._getFile();
     }
 
     get extension_name() {
-        return this.name.split('.').pop();
+        return this.name.split('.').pop().toLowerCase();
     }
 
     get name_without_extension() {
@@ -39,6 +33,22 @@ class FHFileEntry extends FHFileSystemEntry {
         return (bytes / (1024 * 1024 * 1024 * 1024)).toFixed(1) + ' TiB';
     }
 
+    get type() {
+        return this.file.type;
+    }
+
+    get last_modified() {
+        return this.file.lastModified;
+    }
+
+    get last_modified_date() {
+        return this.file.lastModifiedDate;
+    }
+
+    get last_modified_format_date() {
+        return this.last_modified_date.toLocaleString();
+    }
+
     async _checkReady() {
         if (this.is_ready) return new Promise(resolve => resolve());
 
@@ -50,9 +60,34 @@ class FHFileEntry extends FHFileSystemEntry {
         return p;
     }
 
+    async _getFile() {
+        let rsl;
+        const p = new Promise(resolve => { rsl = resolve });
+
+        this.handle.getFile()
+            .then(file => {
+                this.file = file;
+                this.is_ready = true;
+                this.#check_ready_callback();
+                rsl();
+            })
+            .catch(error => {
+                throw error
+            });
+        return p;
+    }
+
     getFile() {
         if (!this.is_ready) return;
         return this.file;
+    }
+
+    async readText() {
+        if (!this.is_ready) await this._getFile();
+
+        const text = await this.file.text();
+
+        return this._resolveReturn(text);
     }
 }
 

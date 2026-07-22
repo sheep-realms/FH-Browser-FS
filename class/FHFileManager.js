@@ -17,6 +17,9 @@ class FHFileManager {
         this.view_index = 0;
 
         this.config = {
+            security: {
+                max_path_length: 200
+            },
             cache: {
                 recently_access_length: 128
             }

@@ -1,0 +1,27 @@
+.file-list-content {
+    padding: 0;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.file-item:first-child {
+    border-top: 1px solid #eee;
+}
+
+.file-item .file-item-link {
+    flex: 1;
+}
+
+.file-item .file-size {
+    width: 6rem;
+    font-size: 14px;
+}
+
+.file-item .file-last-modified {
+    width: 10rem;
+    font-size: 14px;
+}

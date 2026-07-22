@@ -91,11 +91,14 @@ class FHFileView {
         this.#removeDirectoryStack();
 
         const list = await this.current_directory_entry.list();
-        return this.manager._resolveReturn({
-            kind: 'directory',
-            list: list.payload,
-            can_back: this.can_back
-        });
+        return this.manager._resolveReturn(
+            {
+                kind: 'directory',
+                list: list.payload,
+                can_back: this.can_back
+            },
+            this.current_path
+        );
     }
 
     async list() {
