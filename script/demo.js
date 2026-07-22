@@ -4,6 +4,40 @@ let userView = null;
 
 let demo_print = [];
 
+function getFileIcon(entry) {
+    const typeMap = {
+        text: 'file-document',
+        image: 'file-image'
+    };
+    const extMap = {
+        'appref-ms': 'application',
+        db: 'database',
+        accdb: 'database',
+        csv: 'file-table',
+        doc: 'file-word',
+        docm: 'file-word',
+        docx: 'file-word',
+        exe: 'application',
+        md: 'language-markdown',
+        ppt: 'file-powerpoint',
+        pptm: 'file-powerpoint',
+        pptx: 'file-powerpoint',
+        pub: 'file-document',
+        sql: 'database',
+        xls: 'file-excel',
+        xlsm: 'file-excel',
+        xlsx: 'file-excel',
+        zip: 'zip-box'
+    };
+
+    if (entry.is_directory) return ICON.folder;
+
+    const [ type, typeEx ] = entry.type.split('/');
+    if (extMap[entry.extension_name] !== undefined) return ICON[extMap[entry.extension_name]];
+    if (typeMap[type] !== undefined) return ICON[typeMap[type]];
+    return ICON.file;
+}
+
 function renderFileList(list) {
     const fileListSel = $('#file-list');
     fileListSel.text('');
@@ -11,7 +45,9 @@ function renderFileList(list) {
     let dom = '';
     list.forEach(e => {
         dom += `<li class="file-item">
-            <a class="file-item-link" href="javascript:;" data-file-name="${ e.name }">${ e.name }</a>
+            <span class="file-icon">${ getFileIcon(e) }</span>
+            <span class="file-name"><a class="file-item-link" href="javascript:;" data-file-name="${ e.name }">${ e.name }</a></span>
+            <span class="file-type" title="${ e.is_file ? e.type : '' }">${ e.is_file ? e.type : '' }</span>
             <span class="file-size">${ e.is_file ? e.format_size : '' }</span>
             <span class="file-last-modified">${ e.is_file ? e.last_modified_format_date : '' }</span>
         </li>`;

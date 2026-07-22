@@ -6,14 +6,37 @@
     display: flex;
     align-items: center;
     border-bottom: 1px solid #eee;
+    gap: 0.5rem;
 }
 
 .file-item:first-child {
     border-top: 1px solid #eee;
 }
 
-.file-item .file-item-link {
+.file-item .file-icon {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    fill: #888;
+}
+
+.file-item .file-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.file-item .file-name {
     flex: 1;
+}
+
+.file-item .file-type {
+    width: 10rem;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .file-item .file-size {
