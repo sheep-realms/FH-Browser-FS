@@ -37,3 +37,9 @@
 | `WRITE__NO_MODIFICATION_ALLOWED` | 浏览器无法获取与文件句柄关联的文件的锁。 |
 | `WRITE__QUOTA_EXCEEDED` | 磁盘空间不足。 |
 | `WRITE__UNKNOW_ERROR` | 写入时发生未知错误。 |
+
+## 文件删除
+
+| 代码 | 说明 |
+| - | - |
+| `DELETE__HAS_CHILDREN` | 目录中包含文件，请使用递归删除 `deleteDirectory()`。 |
