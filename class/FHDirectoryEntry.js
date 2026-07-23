@@ -173,9 +173,15 @@ class FHDirectoryEntry extends FHFileSystemEntry {
 
     /**
      * 销毁实例
+     * @param {Object} options 选项
+     * @param {boolean} options.allow_destroy_root 允许销毁根目录
      */
-    destroy() {
-        if (this.#destroyed || this.is_root) return;
+    destroy(options = {}) {
+        const { allow_destroy_root = false } = options;
+        if (this.is_root && !allow_destroy_root) {
+            throw new Error('[FHDirectoryEntry] The root directory cannot be destroyed. If you believe this is not an error, please set allow_destroy_root = true');
+        }
+        if (this.#destroyed) return;
         this.#destroyed = true;
         this.handle = null;
         this.manager = null;
