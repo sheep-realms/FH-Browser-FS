@@ -242,6 +242,76 @@ class FHFileManager {
     }
 
     /**
+     * 通过路径获取入口文件列表
+     * @param {string} path 完整路径
+     * @param {Object} options 选项
+     * @param {boolean} options.directory_only 仅限目录
+     * @param {boolean} options.last_must_file 路径末尾必须是文件
+     * @param {boolean} options.uninterruptible 路径不可中断
+     * @returns {Array<FHDirectoryEntry|FHFileEntry>} 文件系统入口
+     */
+    async getEntryForPath(path, options = {}) {
+        const {
+            directory_only = false,
+            last_must_file = false,
+            uninterruptible = true
+        } = options;
+
+        if (!path.startsWith('/')) return this._rejectReturnReason('PARAMETER__ABSOLUTE_PATH_ONLY');
+        if (path.endsWith('/')) path = path.substring(0, path.length - 1);
+
+        const pathList = path.substring(1).split('/');
+        let currentEntry = this.root_entry;
+        let stack = [];
+
+        for (let i = 0; i < pathList.length; i++) {
+            const pathPart = pathList[i];
+
+            const r = await currentEntry.get(pathPart);
+            if (!r.success) return r;
+
+            const newEntry = r.payload;
+            stack.push(newEntry);
+
+            if (newEntry.is_file) {
+                if (directory_only) {
+                    this._rejectReturn(
+                        {
+                            reason: 'FAILED__PATH_INCLUDE_FILE',
+                            stack
+                        },
+                        path
+                    );
+                }
+                if (uninterruptible && i < pathList.length - 1) {
+                    this._rejectReturn(
+                        {
+                            reason: 'FAILED__PATH_UNREACHABLE',
+                            stack
+                        },
+                        path
+                    );
+                }
+                break;
+            }
+
+            currentEntry = newEntry;
+        }
+
+        if (last_must_file && !stack[stack.length - 1].is_file) {
+            this._rejectReturn(
+                {
+                    reason: 'FAILED__PATH_LAST_NOT_FILE',
+                    stack
+                },
+                path
+            );
+        }
+
+        return this._resolveReturn(stack, path);
+    }
+
+    /**
      * 创建视图
      * @param {string} id 视图 ID
      * @param {string} path 路径

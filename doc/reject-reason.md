@@ -4,8 +4,9 @@
 
 | 代码 | 说明 |
 | - | - |
-| `PARAMETER__VALUE_INVALID` | 无效的参数值。 |
+| `PARAMETER__ABSOLUTE_PATH_ONLY` | 仅限绝对路径。 |
 | `PARAMETER__TYPE_ERROR` | 参数类型错误。 |
+| `PARAMETER__VALUE_INVALID` | 无效的参数值。 |
 
 ## 系统
 
@@ -43,3 +44,11 @@
 | 代码 | 说明 |
 | - | - |
 | `DELETE__HAS_CHILDREN` | 目录中包含文件，请使用递归删除 `deleteDirectory()`。 |
+
+## 测试失败
+
+| 代码 | 说明 |
+| - | - |
+| `FAILED__PATH_INCLUDE_FILE` | `directory_only` 为 `true` 时，路径中包含文件。 |
+| `FAILED__PATH_LAST_NOT_FILE` | `last_must_file` 为 `true` 时，路径末尾并非文件。 |
+| `FAILED__PATH_UNREACHABLE` | `uninterruptible` 为 `true` 时，路径中途出现了文件。 |
