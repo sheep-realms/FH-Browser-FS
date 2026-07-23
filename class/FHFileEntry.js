@@ -117,14 +117,16 @@ class FHFileEntry extends FHFileSystemEntry {
     }
 
     /**
-     * 写入文本
-     * @param {string} content 文本
+     * 写入内容
+     * @param {string} data 内容
      * @returns {Promise} Promise
      */
-    async writeText(content) {
+    async write(data) {
+        if (!this.is_ready) await this.#getFile();
+
         try {
             const writable = await this.handle.createWritable();
-            await writable.write(content);
+            await writable.write(data);
             await writable.close();
             return this._resolveReturn();
         } catch (error) {
@@ -147,6 +149,34 @@ class FHFileEntry extends FHFileSystemEntry {
                 error
             });
         }
+    }
+
+    /**
+     * 写入文本
+     * @param {string} text 文本
+     * @returns {Promise} Promise
+     */
+    async writeText(text) {
+        if (typeof text !== 'string') {
+            return this._rejectReturnReason('PARAMETER__TYPE_ERROR');
+        }
+
+        return this.write(text);
+    }
+
+    /**
+     * 写入二进制数据
+     * @param {Blob|string} blob 二进制数据或字符串
+     * @param {string} type MIME 类型 
+     * @returns {Promise} Promise
+     */
+    async writeBlob(blob, type = 'text/plain') {
+        if (blob instanceof Blob) return this.write(blob);
+        if (typeof blob !== 'string') return this._rejectReturnReason('PARAMETER__TYPE_ERROR');
+
+        const blobParts = [blob];
+        const newBlob = new Blob(blobParts, { type });
+        return this.write(newBlob);
     }
 }
 

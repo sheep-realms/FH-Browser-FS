@@ -129,7 +129,7 @@ class FHFileView {
      * @returns {Promise} Promise
      */
     async createFile(name, content = '') {
-        return await this.current_directory_entry.createFile(name, content);
+        return this.current_directory_entry.createFile(name, content);
     }
 
     /**
@@ -138,7 +138,7 @@ class FHFileView {
      * @returns {Promise} Promise
      */
     async createDirectory(name) {
-        return await this.current_directory_entry.createDirectory(name);
+        return this.current_directory_entry.createDirectory(name);
     }
 }
 
