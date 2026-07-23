@@ -257,7 +257,9 @@ class FHFileManager {
             uninterruptible = true
         } = options;
 
+        path = path.trim();
         if (!path.startsWith('/')) return this._rejectReturnReason('INPUT__ABSOLUTE_PATH_ONLY');
+        if (path === '/') return this._resolveReturn([], path);
         if (path.endsWith('/')) path = path.substring(0, path.length - 1);
 
         const pathList = path.substring(1).split('/');
