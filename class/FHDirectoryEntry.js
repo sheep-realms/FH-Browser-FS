@@ -1,7 +1,10 @@
 class FHDirectoryEntry extends FHFileSystemEntry {
+    #destroyed;
+
     constructor(manager, handle = null, path = '/', options = {}) {
         super(manager, handle, path, options);
         this.is_root = (options.root_directory ?? false) && handle.kind === 'directory';
+        this.#destroyed = false;
     }
 
     /**
@@ -166,6 +169,16 @@ class FHDirectoryEntry extends FHFileSystemEntry {
      */
     async deleteDirectory(name) {
         return this.deleteFile(name, { recursive: true });
+    }
+
+    /**
+     * 销毁实例
+     */
+    destroy() {
+        if (this.#destroyed || this.is_root) return;
+        this.#destroyed = true;
+        this.handle = null;
+        this.manager = null;
     }
 }
 

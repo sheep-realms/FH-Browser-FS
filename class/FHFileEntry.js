@@ -1,11 +1,13 @@
 class FHFileEntry extends FHFileSystemEntry {
     #check_ready_callback;
+    #destroyed;
 
     constructor(manager, handle = null, path = '/', options = {}) {
         super(manager, handle, path, options);
         this.file = null;
         this.is_ready = false;
         this.#check_ready_callback = () => {};
+        this.#destroyed = false;
 
         this.#getFile();
     }
@@ -177,6 +179,18 @@ class FHFileEntry extends FHFileSystemEntry {
         const blobParts = [blob];
         const newBlob = new Blob(blobParts, { type });
         return this.write(newBlob);
+    }
+
+    /**
+     * 销毁实例
+     */
+    destroy() {
+        if (this.#destroyed) return;
+        this.#destroyed = true;
+        this.file = null;
+        this.handle = null;
+        this.manager = null;
+        this.is_ready = false;
     }
 }
 

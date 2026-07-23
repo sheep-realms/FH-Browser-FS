@@ -1,8 +1,11 @@
 class FHFileView {
+    #destroyed;
+
     constructor(manager) {
         this.manager = manager;
         this.root_entry = manager.root_entry;
         this.directory_stack = [];
+        this.#destroyed = false;
     }
 
     // 可返回上一级目录
@@ -139,6 +142,20 @@ class FHFileView {
      */
     async createDirectory(name) {
         return this.current_directory_entry.createDirectory(name);
+    }
+
+    /**
+     * 销毁实例
+     */
+    destroy() {
+        if (this.#destroyed) return;
+        this.#destroyed = true;
+        this.directory_stack.forEach(e => {
+            e.destroy();
+        });
+        this.directory_stack = [];
+        this.root_entry = null;
+        this.manager = null;
     }
 }
 
