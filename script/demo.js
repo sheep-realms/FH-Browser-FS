@@ -59,9 +59,9 @@ function renderFileList(list) {
 function checkActionEnable() {
     $('.btn-view-action').removeAttr('disabled');
     if (userView.can_back) {
-        $('#view-back').removeAttr('disabled');
+        $('#view-back, #view-home').removeAttr('disabled');
     } else {
-        $('#view-back').attr('disabled', '');
+        $('#view-back, #view-home').attr('disabled', '');
     }
 }
 
@@ -81,6 +81,14 @@ $(document).on('click', '#pick-directory', async function() {
     $('#view-path').text('/');
 })
 
+$(document).on('click', '#view-home', async function() {
+    const r = await userView.backToRoot(name);
+    if (!r.success) return;
+    checkActionEnable();
+    $('#view-path').text(r.path);
+    renderFileList(r.payload.list);
+})
+
 $(document).on('click', '#view-back', async function() {
     const r = await userView.back(name);
     if (!r.success) return;
@@ -93,6 +101,15 @@ $(document).on('click', '#view-refresh', async function() {
     const r = await userView.list();
     if (!r.success) return;
     renderFileList(r.payload);
+})
+
+$(document).on('click', '#view-path-goto-btn', async function() {
+    const path = $('#view-path-goto-ipt').val();
+    const r = await userView.goto(path);
+    if (!r.success) return;
+    checkActionEnable();
+    $('#view-path').text(r.path);
+    renderFileList(r.payload.list);
 })
 
 $(document).on('click', '#view-create-file', async function() {

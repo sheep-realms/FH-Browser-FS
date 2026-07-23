@@ -109,8 +109,8 @@ class FHFileManager {
     }
 
     /**
-     * 获取根目录入口
-     * @returns {FHDirectoryEntry} 根目录入口
+     * 获取根目录条目
+     * @returns {FHDirectoryEntry} 根目录条目
      */
     getRootEntry() {
         return this.root_entry;
@@ -227,11 +227,11 @@ class FHFileManager {
     }
 
     /**
-     * 创建文件系统入口
+     * 创建文件系统条目
      * @param {FileSystemDirectoryHandle|FileSystemFileHandle} handle 文件或目录 handle
      * @param {string} path 路径
      * @param {Object} options 选项
-     * @returns {FHDirectoryEntry|FHFileEntry} 文件系统入口
+     * @returns {FHDirectoryEntry|FHFileEntry} 文件系统条目
      */
     createEntry(handle, path, options = {}) {
         if (handle.kind === 'directory') {
@@ -242,13 +242,13 @@ class FHFileManager {
     }
 
     /**
-     * 通过路径获取入口文件列表
+     * 通过路径获取条目文件列表
      * @param {string} path 完整路径
      * @param {Object} options 选项
      * @param {boolean} options.directory_only 仅限目录
      * @param {boolean} options.last_must_file 路径末尾必须是文件
      * @param {boolean} options.uninterruptible 路径不可中断
-     * @returns {Array<FHDirectoryEntry|FHFileEntry>} 文件系统入口
+     * @returns {Array<FHDirectoryEntry|FHFileEntry>} 文件系统条目
      */
     async getEntryForPath(path, options = {}) {
         const {

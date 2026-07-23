@@ -5,7 +5,7 @@
 - [ ] 文件夹访问
   - [x] 基本路径穿梭
   - [ ] 返回之前访问的下一级
-  - [ ] 任意路径跳转
+  - [x] 任意路径跳转
   - [ ] 更符合直觉的访问历史（低优先级）
 - [ ] 文件访问
   - [x] 读取基本信息
@@ -30,9 +30,9 @@
 ```
 FHFileManager - 文件管理器
 FHFileView - 用户视图
-FHFileSystemEntry - 文件系统入口
-├── FHDirectoryEntry - 目录入口
-└── FHFileEntry - 文件入口
+FHFileSystemEntry - 文件系统条目
+├── FHDirectoryEntry - 目录条目
+└── FHFileEntry - 文件条目
 ```
 
 ## 文档

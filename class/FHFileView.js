@@ -26,7 +26,7 @@ class FHFileView {
         return '/' + stack.join('/');
     }
 
-    // 当前目录入口
+    // 当前目录条目
     get current_directory_entry() {
         if (this.directory_stack.length === 0) return this.root_entry;
         return this.directory_stack[this.directory_stack.length - 1];
@@ -35,7 +35,7 @@ class FHFileView {
     /**
      * 添加目录堆栈
      * @private
-     * @param {FHDirectoryEntry} entry 要添加的目录入口
+     * @param {FHDirectoryEntry} entry 要添加的目录条目
      */
     #addDirectoryStack(entry) {
         this.directory_stack.push(entry);
@@ -44,7 +44,7 @@ class FHFileView {
     /**
      * 移除顶层目录堆栈
      * @private
-     * @param {FHDirectoryEntry} entry 用于匹配的要移除的目录入口
+     * @param {FHDirectoryEntry} entry 用于匹配的要移除的目录条目
      */
     #removeDirectoryStack(entry = undefined) {
         if (typeof entry === 'object' && entry.name !== this.current_directory_entry.name) {
@@ -52,6 +52,14 @@ class FHFileView {
             return;
         }
         this.directory_stack.pop();
+    }
+
+    #clearDirectoryStack(entry = undefined) {
+        this.directory_stack = [];
+    }
+
+    #replaceDirectoryStack(entries = []) {
+        this.directory_stack = entries;
     }
 
     /**
@@ -117,12 +125,48 @@ class FHFileView {
         );
     }
 
+    async backToRoot() {
+        this.#clearDirectoryStack();
+
+        const r = await this.current_directory_entry.list();
+        return this.manager._resolveReturn(
+            {
+                kind: 'directory',
+                list: r.payload,
+                can_back: this.can_back
+            },
+            this.current_path
+        );
+    }
+
     /**
      * 列出当前目录中的文件
      * @returns {Promise} Promise
      */
     async list() {
         return this.current_directory_entry.list();
+    }
+
+    /**
+     * 跳转到指定路径
+     * @param {string} path 路径
+     * @returns {Promise} Promise
+     */
+    async goto(path) {
+        if (!path.startsWith('/')) path = this.manager._resolvePath(this.current_path, path);
+        const r = await this.manager.getEntryForPath(path, { directory_only: true });
+        if (!r.success) return r;
+        const entries = r.payload;
+        this.#replaceDirectoryStack(entries);
+        const r2 = await this.current_directory_entry.list();
+        return this.manager._resolveReturn(
+            {
+                kind: 'directory',
+                list: r2.payload,
+                can_back: this.can_back
+            },
+            this.current_path
+        );
     }
 
     /**
