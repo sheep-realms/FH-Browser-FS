@@ -61,12 +61,12 @@ class FHFileView {
      */
     async access(name) {
         if (typeof name !== 'string') {
-            return this.manager._rejectReturnReason('PARAMETER__TYPE_ERROR');
+            return this.manager._rejectReturnReason('INPUT__TYPE_ERROR');
         }
 
         name = name.trim();
         if (name === '') {
-            return this.manager._rejectReturnReason('PARAMETER__VALUE_INVALID');
+            return this.manager._rejectReturnReason('INPUT__VALUE_INVALID');
         }
 
         const r = await this.current_directory_entry.get(name);

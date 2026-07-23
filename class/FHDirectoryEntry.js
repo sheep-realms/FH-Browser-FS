@@ -71,7 +71,7 @@ class FHDirectoryEntry extends FHFileSystemEntry {
             const ERROR_REASON = {
                 NotAllowedError:    'SYSTEM__READ_ONLY',
                 TypeMismatchError:  'WRITE__DIRECTORY_NAME_OCCUPIED',
-                TypeError:          'PARAMETER__TYPE_ERROR'
+                TypeError:          'INPUT__TYPE_ERROR'
             }
             if (ERROR_REASON[error.name] === undefined) {
                 return this._rejectReturn({
@@ -107,7 +107,7 @@ class FHDirectoryEntry extends FHFileSystemEntry {
             const ERROR_REASON = {
                 NotAllowedError:    'SYSTEM__READ_ONLY',
                 TypeMismatchError:  'WRITE__DIRECTORY_NAME_OCCUPIED',
-                TypeError:          'PARAMETER__TYPE_ERROR'
+                TypeError:          'INPUT__TYPE_ERROR'
             }
             if (ERROR_REASON[error.name] === undefined) {
                 return this._rejectReturn({
@@ -147,7 +147,7 @@ class FHDirectoryEntry extends FHFileSystemEntry {
                 InvalidModificationError:   'DELETE__HAS_CHILDREN',
                 NotAllowedError:            'SYSTEM__READ_ONLY',
                 NotFoundError:              'ACCESS__FILE_NOT_FOUND',
-                TypeError:                  'PARAMETER__TYPE_ERROR'
+                TypeError:                  'INPUT__TYPE_ERROR'
             }
             if (ERROR_REASON[error.name] === undefined) {
                 return this._rejectReturn({

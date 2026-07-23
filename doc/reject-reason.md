@@ -2,7 +2,7 @@
 
 拒绝原因根据异常发生时机的不同，分为以下类型：
 
-- `PARAMETER`：函数参数错误，前置检查不通过，函数主行为尚未运行。
+- `INPUT`：函数参数错误，前置检查不通过，函数主行为尚未运行。
 - `SYSTEM`：系统错误，函数不具备运行所需的环境条件或系统配置冲突。
 - `ACCESS`：访问错误，尝试访问文件时出现异常。
 - `WRITE`：写入错误，尝试写入文件时出现异常。
@@ -13,9 +13,9 @@
 
 | 代码 | 说明 |
 | - | - |
-| `PARAMETER__ABSOLUTE_PATH_ONLY` | 仅限绝对路径。 |
-| `PARAMETER__TYPE_ERROR` | 参数类型错误。 |
-| `PARAMETER__VALUE_INVALID` | 无效的参数值。 |
+| `INPUT__ABSOLUTE_PATH_ONLY` | 仅限绝对路径。 |
+| `INPUT__TYPE_ERROR` | 参数类型错误。 |
+| `INPUT__VALUE_INVALID` | 无效的参数值。 |
 
 ## 系统
 

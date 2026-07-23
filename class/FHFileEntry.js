@@ -138,7 +138,7 @@ class FHFileEntry extends FHFileSystemEntry {
                 NotFoundError:              'ACCESS__FILE_NOT_FOUND',
                 NoModificationAllowedError: 'WRITE__NO_MODIFICATION_ALLOWED',
                 QuotaExceededError:         'WRITE__QUOTA_EXCEEDED',
-                TypeError:                  'PARAMETER__TYPE_ERROR'
+                TypeError:                  'INPUT__TYPE_ERROR'
             }
             if (ERROR_REASON[error.name] === undefined) {
                 return this._rejectReturn({
@@ -160,7 +160,7 @@ class FHFileEntry extends FHFileSystemEntry {
      */
     async writeText(text) {
         if (typeof text !== 'string') {
-            return this._rejectReturnReason('PARAMETER__TYPE_ERROR');
+            return this._rejectReturnReason('INPUT__TYPE_ERROR');
         }
 
         return this.write(text);
@@ -174,7 +174,7 @@ class FHFileEntry extends FHFileSystemEntry {
      */
     async writeBlob(blob, type = 'text/plain') {
         if (blob instanceof Blob) return this.write(blob);
-        if (typeof blob !== 'string') return this._rejectReturnReason('PARAMETER__TYPE_ERROR');
+        if (typeof blob !== 'string') return this._rejectReturnReason('INPUT__TYPE_ERROR');
 
         const blobParts = [blob];
         const newBlob = new Blob(blobParts, { type });
