@@ -18,6 +18,7 @@ class FHFileManager {
 
         this.config = {
             security: {
+                file_name_prevent_rule: /^(?!(?:\.{1,2})$)(?!(?i:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$)(?!.*[ .]$)[^<>:"/\\|?*\x00-\x1F\x7F]+$/,
                 max_path_length: 200
             },
             cache: {

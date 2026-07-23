@@ -131,6 +131,15 @@ class FHFileView {
     async createFile(name, content = '') {
         return await this.current_directory_entry.createFile(name, content);
     }
+
+    /**
+     * 在当前目录中创建目录
+     * @param {string} name 目录名
+     * @returns {Promise} Promise
+     */
+    async createDirectory(name) {
+        return await this.current_directory_entry.createDirectory(name);
+    }
 }
 
 window.FHFileView = FHFileView;

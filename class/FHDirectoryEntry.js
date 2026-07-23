@@ -50,12 +50,55 @@ class FHDirectoryEntry extends FHFileSystemEntry {
      * @returns {Promise} Promise
      */
     async createFile(name, content = '') {
+        if (!this._checkFileName(name)) {
+            return this._rejectReturn({
+                reason: 'WRITE__FILE_NAME_UNACCEPTABLE',
+                name,
+            });
+        }
+
         try {
             const newFileHandle = await this.handle.getFileHandle(name, { create: true });
             const writable = await newFileHandle.createWritable();
             await writable.write(content);
             await writable.close();
             const entry = this.manager.createEntry(newFileHandle, this.absolute_path);
+            return this._resolveReturn(entry, this.absolute_path, name);
+        } catch (error) {
+            const ERROR_REASON = {
+                NotAllowedError:    'SYSTEM__READ_ONLY',
+                TypeMismatchError:  'WRITE__DIRECTORY_NAME_OCCUPIED',
+                TypeError:          'PARAMETER__TYPE_ERROR'
+            }
+            if (ERROR_REASON[error.name] === undefined) {
+                return this._rejectReturn({
+                    reason: 'WRITE__UNKNOW_ERROR',
+                    error
+                });
+            }
+            return this._rejectReturn({
+                reason: ERROR_REASON[error.name],
+                error
+            });
+        }
+    }
+
+    /**
+     * 创建目录
+     * @param {string} name 目录名
+     * @returns {Promise} Promise
+     */
+    async createDirectory(name) {
+        if (!this._checkFileName(name)) {
+            return this._rejectReturn({
+                reason: 'WRITE__FILE_NAME_UNACCEPTABLE',
+                name,
+            });
+        }
+
+        try {
+            const newDirectoryHandle = await this.handle.getDirectoryHandle(name, { create: true });
+            const entry = this.manager.createEntry(newDirectoryHandle, this.absolute_path);
             return this._resolveReturn(entry, this.absolute_path, name);
         } catch (error) {
             const ERROR_REASON = {

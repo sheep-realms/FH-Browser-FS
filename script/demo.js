@@ -104,6 +104,15 @@ $(document).on('click', '#view-create-file', async function() {
     renderFileList(r2.payload);
 })
 
+$(document).on('click', '#view-create-directory', async function() {
+    const name = prompt('Folder Name:', 'New Folder');
+    const r = await userView.createDirectory(name);
+    if (!r.success) return;
+    const r2 = await userView.list();
+    if (!r2.success) return;
+    renderFileList(r2.payload);
+})
+
 $(document).on('click', '#view-demo-print-directory', function() {
     demo_print = userView.current_directory_entry;
 })

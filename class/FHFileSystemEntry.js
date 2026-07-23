@@ -32,6 +32,16 @@ class FHFileSystemEntry {
     }
 
     /**
+     * 检查文件名是否合法
+     * @param {string} name 文件名
+     * @returns {boolean} 是否合法
+     */
+    _checkFileName(name) {
+        if (typeof name !== 'string') return false;
+        return this.manager.config.security.file_name_prevent_rule.test(name);
+    }
+
+    /**
      * 拼接并规范化路径
      * @param {...(string|Object)} args ...路径, 选项
      * @param {Boolean} args.trailingSlash 保留末尾斜杠
@@ -61,7 +71,7 @@ class FHFileSystemEntry {
      * @returns {Promise} Promise
      */
     _rejectReturn(payload = {}, path = this.path, name = this.name) {
-        return this.manager._resolveReturn(payload, path, name);
+        return this.manager._rejectReturn(payload, path, name);
     }
 
     /**
