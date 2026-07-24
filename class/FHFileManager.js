@@ -18,8 +18,7 @@ class FHFileManager {
 
         this.config = {
             security: {
-                file_name_prevent_rule: /^(?!(?:\.{1,2})$)(?!(?i:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$)(?!.*[ .]$)[^<>:"/\\|?*\x00-\x1F\x7F]+$/,
-                max_path_length: 200
+                file_name_prevent_rule: /^(?!(?:\.{1,2})$)(?!(?i:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$)(?!.*[ .]$)[^<>:"/\\|?*\x00-\x1F\x7F]+$/
             },
             cache: {
                 recently_access_length: 128
@@ -158,7 +157,7 @@ class FHFileManager {
             if (segment === "" || segment === ".") continue;
             if (segment === "..") {
                 if (stack.length === 0) {
-                    throw new Error("[FHFileManager] Path escapes the root directory.");
+                    throw new Error("[FHFileManager] Path escapes the root directory.", { reason: '_FAILED__ESCAPES_ROOT' });
                 }
                 stack.pop();
                 continue;
@@ -247,14 +246,14 @@ class FHFileManager {
      * @param {Object} options 选项
      * @param {boolean} options.directory_only 仅限目录
      * @param {boolean} options.last_must_file 路径末尾必须是文件
-     * @param {boolean} options.uninterruptible 路径不可中断
+     * @param {boolean} options.allow_file_interruption 允许文件中断路径
      * @returns {Array<FHDirectoryEntry|FHFileEntry>} 文件系统条目
      */
     async getEntryForPath(path, options = {}) {
         const {
             directory_only = false,
             last_must_file = false,
-            uninterruptible = true
+            allow_file_interruption = false
         } = options;
 
         path = path.trim();
@@ -262,14 +261,14 @@ class FHFileManager {
         if (path === '/') return this._resolveReturn([], path);
         if (path.endsWith('/')) path = path.substring(0, path.length - 1);
 
-        const pathList = path.substring(1).split('/');
+        const segments = path.substring(1).split('/');
         let currentEntry = this.root_entry;
         let stack = [];
 
-        for (let i = 0; i < pathList.length; i++) {
-            const pathPart = pathList[i];
+        for (let i = 0; i < segments.length; i++) {
+            const segment = segments[i];
 
-            const r = await currentEntry.get(pathPart);
+            const r = await currentEntry.get(segment);
             if (!r.success) return r;
 
             const newEntry = r.payload;
@@ -285,7 +284,7 @@ class FHFileManager {
                         path
                     );
                 }
-                if (uninterruptible && i < pathList.length - 1) {
+                if (!allow_file_interruption && i < segments.length - 1) {
                     this._rejectReturn(
                         {
                             reason: 'FAILED__PATH_UNREACHABLE',

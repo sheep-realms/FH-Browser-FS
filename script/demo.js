@@ -33,7 +33,7 @@ function getFileIcon(entry) {
     if (entry.is_directory) return ICON.folder;
 
     const [ type, typeEx ] = entry.type.split('/');
-    if (extMap[entry.extension_name] !== undefined) return ICON[extMap[entry.extension_name]];
+    if (extMap[entry.extension] !== undefined) return ICON[extMap[entry.extension]];
     if (typeMap[type] !== undefined) return ICON[typeMap[type]];
     return ICON.file;
 }
@@ -58,7 +58,7 @@ function renderFileList(list) {
 
 function checkActionEnable() {
     $('.btn-view-action').removeAttr('disabled');
-    if (userView.can_back) {
+    if (userView.can_go_up) {
         $('#view-back, #view-home').removeAttr('disabled');
     } else {
         $('#view-back, #view-home').attr('disabled', '');
@@ -82,7 +82,7 @@ $(document).on('click', '#pick-directory', async function() {
 })
 
 $(document).on('click', '#view-home', async function() {
-    const r = await userView.backToRoot(name);
+    const r = await userView.goToRoot(name);
     if (!r.success) return;
     checkActionEnable();
     $('#view-path').text(r.path);
@@ -90,7 +90,7 @@ $(document).on('click', '#view-home', async function() {
 })
 
 $(document).on('click', '#view-back', async function() {
-    const r = await userView.back(name);
+    const r = await userView.goUp(name);
     if (!r.success) return;
     checkActionEnable();
     $('#view-path').text(r.path);
@@ -105,7 +105,7 @@ $(document).on('click', '#view-refresh', async function() {
 
 $(document).on('click', '#view-path-goto-btn', async function() {
     const path = $('#view-path-goto-ipt').val();
-    const r = await userView.goto(path);
+    const r = await userView.goTo(path);
     if (!r.success) return;
     checkActionEnable();
     $('#view-path').text(r.path);

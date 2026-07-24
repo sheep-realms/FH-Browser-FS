@@ -1,9 +1,9 @@
-class FHFileEntry extends FHFileSystemEntry {
+class FHFileEntry extends FHFileSystemObjectEntry {
     #check_ready_callback;
     #destroyed;
 
-    constructor(manager, handle = null, path = '/', options = {}) {
-        super(manager, handle, path, options);
+    constructor(master, handle = null, path = '/', options = {}) {
+        super(master, handle, path, options);
         this.file = null;
         this.is_ready = false;
         this.#check_ready_callback = () => {};
@@ -13,12 +13,12 @@ class FHFileEntry extends FHFileSystemEntry {
     }
 
     // 扩展名
-    get extension_name() {
+    get extension() {
         return this.name.split('.').pop().toLowerCase();
     }
 
-    // 不包含扩展名的文件名
-    get name_without_extension() {
+    // 基础名称
+    get base_name() {
         let a = this.name.split('.');
         a.pop();
         return a.join('.');
@@ -189,7 +189,7 @@ class FHFileEntry extends FHFileSystemEntry {
         this.#destroyed = true;
         this.file = null;
         this.handle = null;
-        this.manager = null;
+        this.master = null;
         this.is_ready = false;
     }
 }

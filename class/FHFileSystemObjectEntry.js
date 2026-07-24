@@ -1,8 +1,8 @@
-class FHFileSystemEntry {
-    constructor(manager, handle = null, path = '/', options = {}) {
+class FHFileSystemObjectEntry {
+    constructor(master, handle = null, path = '/', options = {}) {
         this.path = path;
         this.handle = handle;
-        this.manager = manager;
+        this.master = master;
     }
 
     // 文件或目录
@@ -38,7 +38,7 @@ class FHFileSystemEntry {
      */
     _checkFileName(name) {
         if (typeof name !== 'string') return false;
-        return this.manager.config.security.file_name_prevent_rule.test(name);
+        return this.master.config.security.file_name_prevent_rule.test(name);
     }
 
     /**
@@ -49,7 +49,7 @@ class FHFileSystemEntry {
      * @throws {Error}
      */
     _resolvePath(...args) {
-        return this.manager._resolvePath(this.path, ...args);
+        return this.master._resolvePath(this.path, ...args);
     }
 
     /**
@@ -60,7 +60,7 @@ class FHFileSystemEntry {
      * @returns {Promise} Promise
      */
     _resolveReturn(payload = {}, path = this.path, name = this.name) {
-        return this.manager._resolveReturn(payload, path, name);
+        return this.master._resolveReturn(payload, path, name);
     }
 
     /**
@@ -71,7 +71,7 @@ class FHFileSystemEntry {
      * @returns {Promise} Promise
      */
     _rejectReturn(payload = {}, path = this.path, name = this.name) {
-        return this.manager._rejectReturn(payload, path, name);
+        return this.master._rejectReturn(payload, path, name);
     }
 
     /**
@@ -82,8 +82,8 @@ class FHFileSystemEntry {
      * @returns {Promise} Promise
      */
     _rejectReturnReason(reason, path = this.path, name = this.name) {
-        return this.manager._rejectReturnReason(reason, path, name);
+        return this.master._rejectReturnReason(reason, path, name);
     }
 }
 
-window.FHFileSystemEntry = FHFileSystemEntry;
+window.FHFileSystemObjectEntry = FHFileSystemObjectEntry;

@@ -30,11 +30,12 @@
 ```
 FHFileManager - 文件管理器
 FHFileView - 用户视图
-FHFileSystemEntry - 文件系统条目
+FHFileSystemObjectEntry - 文件系统对象条目
 ├── FHDirectoryEntry - 目录条目
 └── FHFileEntry - 文件条目
 ```
 
 ## 文档
 
+- [术语表](doc/glossary.md)
 - [拒绝原因列表](doc/reject-reason.md)

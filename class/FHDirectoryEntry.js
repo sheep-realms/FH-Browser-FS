@@ -1,8 +1,8 @@
-class FHDirectoryEntry extends FHFileSystemEntry {
+class FHDirectoryEntry extends FHFileSystemObjectEntry {
     #destroyed;
 
-    constructor(manager, handle = null, path = '/', options = {}) {
-        super(manager, handle, path, options);
+    constructor(master, handle = null, path = '/', options = {}) {
+        super(master, handle, path, options);
         this.is_root = (options.root_directory ?? false) && handle.kind === 'directory';
         this.#destroyed = false;
     }
@@ -14,7 +14,7 @@ class FHDirectoryEntry extends FHFileSystemEntry {
     async list() {
         const entries = [];
         for await (const [name, handle] of this.handle.entries()) {
-            const entry = this.manager.createEntry(handle, this.absolute_path);
+            const entry = this.master.createEntry(handle, this.absolute_path);
             if (entry.is_file) await entry._checkReady();
             entries.push(entry);
         }
@@ -65,7 +65,7 @@ class FHDirectoryEntry extends FHFileSystemEntry {
             const writable = await newFileHandle.createWritable();
             await writable.write(content);
             await writable.close();
-            const entry = this.manager.createEntry(newFileHandle, this.absolute_path);
+            const entry = this.master.createEntry(newFileHandle, this.absolute_path);
             return this._resolveReturn(entry, this.absolute_path, name);
         } catch (error) {
             const ERROR_REASON = {
@@ -101,7 +101,7 @@ class FHDirectoryEntry extends FHFileSystemEntry {
 
         try {
             const newDirectoryHandle = await this.handle.getDirectoryHandle(name, { create: true });
-            const entry = this.manager.createEntry(newDirectoryHandle, this.absolute_path);
+            const entry = this.master.createEntry(newDirectoryHandle, this.absolute_path);
             return this._resolveReturn(entry, this.absolute_path, name);
         } catch (error) {
             const ERROR_REASON = {
@@ -184,7 +184,7 @@ class FHDirectoryEntry extends FHFileSystemEntry {
         if (this.#destroyed) return;
         this.#destroyed = true;
         this.handle = null;
-        this.manager = null;
+        this.master = null;
     }
 }
 

@@ -1,15 +1,15 @@
 class FHFileView {
     #destroyed;
 
-    constructor(manager) {
-        this.manager = manager;
-        this.root_entry = manager.root_entry;
+    constructor(master) {
+        this.master = master;
+        this.root_entry = master.root_entry;
         this.directory_stack = [];
         this.#destroyed = false;
     }
 
     // 可返回上一级目录
-    get can_back() {
+    get can_go_up() {
         return this.directory_stack.length > 0;
     }
     
@@ -69,12 +69,12 @@ class FHFileView {
      */
     async access(name) {
         if (typeof name !== 'string') {
-            return this.manager._rejectReturnReason('INPUT__TYPE_ERROR');
+            return this.master._rejectReturnReason('INPUT__TYPE_ERROR');
         }
 
         name = name.trim();
         if (name === '') {
-            return this.manager._rejectReturnReason('INPUT__VALUE_INVALID');
+            return this.master._rejectReturnReason('INPUT__VALUE_INVALID');
         }
 
         const r = await this.current_directory_entry.get(name);
@@ -82,7 +82,7 @@ class FHFileView {
         const entry = r.payload;
         if (entry.is_file) {
             await entry._checkReady();
-            return this.manager._resolveReturn(
+            return this.master._resolveReturn(
                 {
                     kind: 'file',
                     entry: entry
@@ -93,11 +93,11 @@ class FHFileView {
         }
         this.#addDirectoryStack(entry);
         const list = await entry.list();
-        return this.manager._resolveReturn(
+        return this.master._resolveReturn(
             {
                 kind: 'directory',
                 list: list.payload,
-                can_back: this.can_back
+                can_go_up: this.can_go_up
             },
             this.current_path
         );
@@ -107,33 +107,33 @@ class FHFileView {
      * 返回上一级目录
      * @returns {Promise} Promise
      */
-    async back() {
-        if (!this.can_back) {
-            return this.manager._rejectReturnReason('ACCESS__ROOT_DIRECTORY_RETURN');
+    async goUp() {
+        if (!this.can_go_up) {
+            return this.master._rejectReturnReason('ACCESS__ROOT_DIRECTORY_RETURN');
         }
 
         this.#removeDirectoryStack();
 
         const list = await this.current_directory_entry.list();
-        return this.manager._resolveReturn(
+        return this.master._resolveReturn(
             {
                 kind: 'directory',
                 list: list.payload,
-                can_back: this.can_back
+                can_go_up: this.can_go_up
             },
             this.current_path
         );
     }
 
-    async backToRoot() {
+    async goToRoot() {
         this.#clearDirectoryStack();
 
         const r = await this.current_directory_entry.list();
-        return this.manager._resolveReturn(
+        return this.master._resolveReturn(
             {
                 kind: 'directory',
                 list: r.payload,
-                can_back: this.can_back
+                can_go_up: this.can_go_up
             },
             this.current_path
         );
@@ -152,18 +152,18 @@ class FHFileView {
      * @param {string} path 路径
      * @returns {Promise} Promise
      */
-    async goto(path) {
-        if (!path.startsWith('/')) path = this.manager._resolvePath(this.current_path, path);
-        const r = await this.manager.getEntryForPath(path, { directory_only: true });
+    async goTo(path) {
+        if (!path.startsWith('/')) path = this.master._resolvePath(this.current_path, path);
+        const r = await this.master.getEntryForPath(path, { directory_only: true });
         if (!r.success) return r;
         const entries = r.payload;
         this.#replaceDirectoryStack(entries);
         const r2 = await this.current_directory_entry.list();
-        return this.manager._resolveReturn(
+        return this.master._resolveReturn(
             {
                 kind: 'directory',
                 list: r2.payload,
-                can_back: this.can_back
+                can_go_up: this.can_go_up
             },
             this.current_path
         );
@@ -199,7 +199,7 @@ class FHFileView {
         });
         this.directory_stack = [];
         this.root_entry = null;
-        this.manager = null;
+        this.master = null;
     }
 }
 

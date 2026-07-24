@@ -1,2 +1,8 @@
-dist
+# 包
 node_modules
+
+# 构建产物
+dist
+
+# 本地扩展产物
+.VSCodeCounter
